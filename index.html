@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Task 1 Practice Booklet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap">
+<style>
+/* Layout: one reading column like an exam booklet; sticky bar carries timer + progress; each task is a numbered sheet */
+:root{
+  --bg:#F3F5F8; --paper:#FFFFFF; --ink:#18212E; --muted:#5A6577; --line:#D5DCE6;
+  --accent:#0E6B70; --accent-soft:#E2F1F1; --term:#9A4D12; --term-soft:#FBEBDC;
+  --field:#F6F9FB; --model:#EEF6EC; --model-ink:#24562A; --warn:#A32D2D;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-text:"Newsreader", Georgia, "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11161D; --paper:#18202A; --ink:#E6EBF1; --muted:#9AA6B6; --line:#2C3746;
+  --accent:#5CC3C6; --accent-soft:#16302F; --term:#F0A866; --term-soft:#3A2717;
+  --field:#1D2632; --model:#18291B; --model-ink:#A6D9A9; --warn:#F08A8A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161D; --paper:#18202A; --ink:#E6EBF1; --muted:#9AA6B6; --line:#2C3746;
+  --accent:#5CC3C6; --accent-soft:#16302F; --term:#F0A866; --term-soft:#3A2717;
+  --field:#1D2632; --model:#18291B; --model-ink:#A6D9A9; --warn:#F08A8A; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.reveal{justify-self:start}
+.reveal.done{border-color:var(--model-ink);color:var(--model-ink)}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:780px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 64px;display:grid;gap:28px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(1.7rem,4.5vw,2.3rem);font-weight:800}
+h2{font-size:1.45rem;font-weight:800}
+h3{font-size:1.1rem;font-weight:600}
+p{margin:0}
+a{color:var(--accent)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line)}
+.bar-in{max-width:780px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between}
+.bar strong{font-family:var(--f-display);font-size:1rem}
+.bar .meta{display:flex;gap:14px;align-items:center;font-size:.92rem;color:var(--muted);font-variant-numeric:tabular-nums;flex-wrap:wrap}
+.btn{font:inherit;font-weight:700;border:1.5px solid var(--accent);background:var(--accent);color:var(--paper);padding:8px 16px;border-radius:8px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:focus-visible,[contenteditable]:focus-visible,textarea:focus-visible,.term:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:24px;display:grid;gap:16px;min-width:0}
+.eyebrow{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.muted{color:var(--muted)}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:700}
+td textarea{min-height:64px;border:none;background:transparent;padding:0}
+.steps{display:grid;gap:8px;padding-left:1.4em;margin:0}
+.passage{font-family:var(--f-text);font-size:1.14rem;line-height:1.7;background:var(--field);border-left:3px solid var(--accent);padding:20px 22px;border-radius:0 10px 10px 0;display:grid;gap:12px;max-width:68ch}
+.passage .pn{font-family:var(--f-body);font-size:.75rem;font-weight:700;color:var(--accent);margin-right:6px;font-variant-numeric:tabular-nums}
+.example{background:var(--term-soft);border-radius:10px;padding:16px 18px;display:grid;gap:8px}
+.q{display:grid;gap:8px;padding-top:6px}
+.q-head{font-weight:400}
+.q-num{font-family:var(--f-display);font-weight:800;color:var(--accent);margin-right:6px}
+.marks{color:var(--muted);font-style:italic;white-space:nowrap}
+.term{font:inherit;font-weight:700;color:var(--term);background:var(--term-soft);border:none;border-radius:5px;padding:0 6px;cursor:pointer}
+.tip{font-size:.92rem;background:var(--term-soft);border-radius:8px;padding:8px 12px}
+textarea{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;min-height:110px;resize:vertical;line-height:1.55}
+textarea[readonly]{opacity:.85}
+.frame{line-height:2.25}
+.blank{display:inline;min-width:7em;padding:2px 8px;border-radius:5px;background:var(--field);border-bottom:2px solid var(--accent);color:var(--ink);outline-offset:1px}
+.blank:empty::before{content:"type here";color:var(--muted);font-style:italic;font-size:.9em}
+.blank[contenteditable="false"]{border-bottom-style:dotted}
+.opt{color:var(--muted);font-size:.92em}
+.model{background:var(--model);color:var(--model-ink);border-radius:10px;padding:12px 16px;display:grid;gap:6px;font-size:.97rem}
+.model b{font-family:var(--f-display);letter-spacing:.02em}
+.checkpoint{font-weight:700;color:var(--warn)}
+.links{font-size:.95rem}
+.video-card{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;background:var(--field);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.video-card a.btn{text-decoration:none}
+.vid{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vid-play{position:absolute;inset:0;width:100%;height:100%;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#fff;font:inherit;font-weight:700;font-size:1.1rem;background:#0b0f14 center/cover no-repeat;background-image:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),url("https://i.ytimg.com/vi/OINa46HeWg8/hqdefault.jpg")}
+.vid-play small{font-weight:400;font-size:.85rem;opacity:.85;padding:0 16px;text-align:center}
+.vid-icon{width:64px;height:64px;border-radius:50%;background:#fff;position:relative}
+.vid-icon::after{content:"";position:absolute;left:26px;top:20px;border-left:18px solid #0b0f14;border-top:12px solid transparent;border-bottom:12px solid transparent}
+
+.finish{border:2px solid var(--accent)}
+.confirm{display:flex;gap:10px;align-items:flex-start}
+.confirm input{width:20px;height:20px;margin-top:3px;accent-color:var(--accent)}
+.status{font-size:.95rem}
+.namefield{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.namefield input{font:inherit;color:var(--ink);background:var(--field);border:1.5px solid var(--line);border-radius:8px;padding:8px 12px;flex:1 1 220px;min-width:0}
+.namefield input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.missing{color:var(--warn)}
+@media (max-width:520px){.sheet{padding:18px}.passage{padding:16px}body{font-size:16px}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="bar"><div class="bar-in">
+  <strong>MYP Task 1 practice</strong>
+  <div class="meta">
+    <span id="progress">0 of 7 questions answered</span>
+    <span id="clock">45:00</span>
+    <button class="btn ghost" id="timerBtn" type="button">Start timer</button>
+  </div>
+</div></div>
+
+<main class="wrap">
+
+<header class="sheet">
+  <span class="eyebrow">MYP eAssessment English Language and Literature</span>
+  <h1>Task 1: introductory lesson</h1>
+  <div class="namefield"><label for="studentName"><b>Your name</b></label><input id="studentName" data-save type="text" autocomplete="name" placeholder="First and last name"></div>
+  <p>Today you meet Task 1 of the eAssessment. You will read a written text, watch a short film, answer short questions on both, and then plan a compare-and-contrast essay using a writing frame.</p>
+  <p>This is a diagnostic task. It shows your teacher what you can already do, so attempt every question and work on your own. Do not use AI.</p>
+  <p><b>Your answers save automatically in this browser.</b> When you have written an answer, press <b>Check my answer</b> under it to see a model answer. Checking locks that answer, so finish it first.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Time</th><th>Part</th><th>What you do</th></tr></thead>
+    <tbody>
+      <tr><td>0 to 3 min</td><td>Start</td><td>Read these instructions and press <b>Start timer</b>.</td></tr>
+      <tr><td>3 to 8 min</td><td>Command term toolkit</td><td>Read the table of command terms.</td></tr>
+      <tr><td>8 to 20 min</td><td>Part A: written text (Task 1A and 1B)</td><td>Read the article, then answer five short questions.</td></tr>
+      <tr><td>20 to 28 min</td><td>Part B: film (Task 1C and 1D)</td><td>Watch the film twice, then answer two short questions.</td></tr>
+      <tr><td>28 to 45 min</td><td>Part C: compare and contrast (Task 1E practice)</td><td>Fill in the essay writing frame, checking each paragraph as you finish it.</td></tr>
+    </tbody>
+  </table></div>
+  <h3>The 3-step routine for every short question</h3>
+  <ol class="steps">
+    <li><b>Spot</b> the command term (the orange word). Tap it to see what it asks.</li>
+    <li><b>Check</b> the toolkit: what kind of thinking does it want?</li>
+    <li><b>Answer</b> in 2 to 3 sentences: make your point, give evidence (a short quotation or a precise visual detail), then say what it shows.</li>
+  </ol>
+  <p class="muted">Stuck for more than two minutes? Write what you can and move on.</p>
+</header>
+
+<section class="sheet" id="toolkit">
+  <span class="eyebrow">Minutes 3 to 8</span>
+  <h2>Command term toolkit</h2>
+  <p>Every question in Task 1 begins with a command term. It tells you exactly what kind of thinking the examiner wants to see.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Command term</th><th>What it asks you to do</th><th>Sentence starter to try</th></tr></thead>
+    <tbody id="toolkitBody"></tbody>
+  </table></div>
+  <p><b>Quick check:</b> cover the middle column. Can you say in your own words what <i>explain</i> and <i>analyse</i> ask you to do?</p>
+</section>
+
+<section class="sheet" id="partA">
+  <span class="eyebrow">Minutes 8 to 20 · Task 1A and 1B</span>
+  <h2>Part A: the written text</h2>
+  <p>Read the article once all the way through (about 4 minutes). Then read it again with the questions in mind. The paragraphs are numbered so you can refer to them.</p>
+  <h3>Text A: "The Basket by the Door"</h3>
+  <p class="muted"><i>An opinion column from a family lifestyle magazine</i></p>
+  <div class="passage">
+    <p><span class="pn">1</span>Last spring, I counted. Over one Sunday dinner, the five people at our table picked up their phones forty-one times. I know because I was one of them. Eleven of those forty-one were mine.</p>
+    <p><span class="pn">2</span>Nobody was being rude, exactly. My son was checking a football score. My daughter was replying to a group chat about homework. My husband was "just looking something up" to settle an argument about the height of the Eiffel Tower. We were together in the same room, sharing the same lasagne, and yet each of us was somewhere else.</p>
+    <p><span class="pn">3</span>Have you ever spoken to someone and watched their eyes drift down to a glowing rectangle? It is a small thing. It lasts a second. But it says, quietly and clearly: <i>you are not the most interesting thing here.</i></p>
+    <p><span class="pn">4</span>So we bought a basket. A cheap wicker one, the kind you might keep apples in. We put it on the shelf by the front door, and we made one rule: when you walk in for dinner, your phone goes in the basket.</p>
+    <p><span class="pn">5</span>The first week was a disaster. My daughter sulked. My son claimed he might miss "something important" (it was a video of a cat falling off a sofa). I caught myself reaching for my pocket like a smoker reaching for a cigarette that is not there. The silence at the table felt heavy and awkward, like a room after an argument.</p>
+    <p><span class="pn">6</span>Then, slowly, something changed. In the third week, my son told us a long, ridiculous story about his chemistry teacher. In the fourth week, my daughter asked her grandmother how she met my father, and we sat there for an hour. Nobody looked up the answer. Nobody needed to.</p>
+    <p><span class="pn">7</span>I am not against technology. My phone lets me see my sister's face every week, even though she lives four thousand kilometres away. But a tool that connects us to people far away can also disconnect us from the people beside us.</p>
+    <p><span class="pn">8</span>The basket is still there. Some evenings it overflows with chargers and cables. Some evenings someone "forgets" and the rule is quietly broken. But most nights, for one hour, we are only where we are.</p>
+    <p><span class="pn">9</span>Try it. Find a basket. You might be surprised by what you hear when the screens go dark.</p>
+  </div>
+
+  <div class="example">
+    <b>Worked example: use this as a model</b>
+    <p><b>Question:</b> <b>Explain</b> why the writer includes the detail about her sister in paragraph 7.</p>
+    <p><b>Model answer:</b> The writer mentions that her phone lets her see her sister "every week" to show that she values technology. This makes her argument seem fair and balanced, because she admits phones have benefits. As a result, readers are more likely to trust her and follow her advice.</p>
+    <p class="muted"><i>Pattern:</i> <b>point</b> (what she does), <b>evidence</b> (short quotation), <b>effect</b> (what it shows or how it affects the reader).</p>
+  </div>
+
+  <h3>Task 1A</h3>
+  <div id="q1"></div><div id="q2"></div><div id="q3"></div>
+  <h3>Task 1B</h3>
+  <div id="q4"></div><div id="q5"></div>
+  <p class="checkpoint">Checkpoint, minute 20: stop Part A now, even if you have not finished, and move on to Part B.</p>
+</section>
+
+<section class="sheet" id="partB">
+  <span class="eyebrow">Minutes 20 to 28 · Task 1C and 1D</span>
+  <h2>Part B: the film</h2>
+  <div class="video-card">
+    <div>
+      <h3>Text B: "I Forgot My Phone" (2013)</h3>
+      <p class="muted">Written by and starring Charlene deGuzman, directed by Miles Crawford. About 2 minutes, almost no dialogue.</p>
+    </div>
+    <a class="btn" href="https://www.youtube.com/watch?v=OINa46HeWg8" target="_blank" rel="noopener">Watch on YouTube</a>
+  </div>
+  <div class="vid" id="vid"><button type="button" class="vid-play" id="vidPlay" aria-label="Play the film on this page"><span class="vid-icon" aria-hidden="true"></span><span>Play the film here</span><small>If the player stays blank, use the Watch on YouTube button.</small></button></div>
+  <p class="links muted">If the video does not play here, use the Watch on YouTube button. If the link does not work, search YouTube for <b>I Forgot My Phone Charlene deGuzman</b>. Put your headphones on.</p>
+  <ul class="steps">
+    <li><b>First viewing (2 min):</b> just watch. What is the story? How does it make you feel?</li>
+    <li><b>Second viewing (2 min):</b> make quick notes in the grid. Pause if you need to.</li>
+  </ul>
+  <div class="tbl"><table>
+    <thead><tr><th>Scene</th><th>What do the other people do?</th><th>What does the main character do? Her face?</th></tr></thead>
+    <tbody id="videoGrid"></tbody>
+  </table></div>
+  <p class="muted"><b>Tip:</b> in a film, your evidence is a precise visual or sound detail: what a character's face shows, where the camera points, what we hear or do not hear.</p>
+  <button class="btn ghost reveal" type="button" data-model="videoModel" data-inputs="#videoGrid textarea" disabled>Check my notes</button>
+  <div class="model" id="videoModel" hidden>
+    <b>Model notes</b>
+    <p>Other people: stare at phones in bed, at lunch, while bowling and at the concert; film moments instead of living them (the birthday boy records his own party, a man films his own proposal).</p>
+    <p>Main character: quiet, watching, trying to make eye contact; her expression shifts from patient to lonely and resigned. She ends the day exactly where she began.</p>
+  </div>
+  <h3>Task 1C</h3>
+  <div id="q6"></div>
+  <h3>Task 1D</h3>
+  <div id="q7"></div>
+  <p class="checkpoint">Checkpoint, minute 28: stop Part B and move on to Part C.</p>
+</section>
+
+<section class="sheet" id="partC">
+  <span class="eyebrow">Minutes 28 to 45 · Task 1E practice</span>
+  <h2>Part C: compare and contrast</h2>
+  <p>In the real eAssessment, Task 1E asks you to write a full compare-and-contrast essay. Today you practise the structure. Click each underlined space and type. Where you see options in [square brackets], choose one or write your own.</p>
+  <p><b>Essay question:</b> Compare and contrast how Text A ("The Basket by the Door") and Text B ("I Forgot My Phone") present the effect of smartphones on human connection.</p>
+  <h3>Before you write: the comparison grid (3 minutes)</h3>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>Text A: the article</th><th>Text B: the film</th></tr></thead>
+    <tbody id="compGrid"></tbody>
+  </table></div>
+  <button class="btn ghost reveal" type="button" data-model="compModel" data-inputs="#compGrid textarea" disabled>Check my grid</button>
+  <div class="model" id="compModel" hidden>
+    <b>Model grid</b>
+    <p><b>Message:</b> A: phones pull families apart, but small rules can fix it. B: phones make us absent from our own lives.</p>
+    <p><b>Evidence:</b> A: "each of us was somewhere else". B: the birthday boy filming his own party.</p>
+    <p><b>Tone:</b> A: reflective, then hopeful. B: humorous at moments, mostly bleak and critical.</p>
+    <p><b>Ending:</b> A: a call to action ("Try it. Find a basket."). B: back in bed, partner still on his phone.</p>
+    <p><b>Effect:</b> A: readers feel encouraged to act. B: viewers feel uncomfortable and recognise their own habits.</p>
+  </div>
+  <div id="frames"></div>
+  <p class="muted"><b>Useful linking words:</b> both, similarly, likewise, in the same way, however, in contrast, whereas, while, on the other hand, unlike, therefore, as a result, ultimately.</p>
+</section>
+
+<section class="sheet finish" id="finish">
+  <span class="eyebrow">When you have finished</span>
+  <h2>Save your work</h2>
+  <p class="status" id="status"></p>
+  <div style="display:flex;flex-wrap:wrap;gap:10px">
+    <button class="btn" id="dlBtn" type="button">Download all responses</button>
+    <button class="btn ghost" id="copyBtn" type="button">Copy all my answers</button>
+  </div>
+  <p class="muted" id="copyMsg">Download saves a Word document with all your responses. Add your name at the top of the page first. You can also copy your answers and paste them into AssessPrep.</p>
+  <textarea id="copyArea" hidden readonly aria-label="All your answers"></textarea>
+</section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+<script>
+const TERMS=[
+ ["Identify","Name or point out something specific. Short and precise.",'"The writer uses..." / "One example is..."'],
+ ["Outline","Give a brief summary of the main points, without detail.",'"The writer first... then..."'],
+ ["Describe","Give a detailed account of what you see, hear or read.",'"In this scene, we see..."'],
+ ["Explain","Give reasons or causes. Say how or why.",'"This suggests... because..."'],
+ ["Analyse","Break something into parts and show how each part creates meaning or effect.",'"The word / image... creates the effect of... which shows..."'],
+ ["Interpret","Explain the meaning of something that is not stated directly.",'"This could mean... because..."'],
+ ["Evaluate","Judge how well something works, using evidence for and against.",'"This is effective because... however..."'],
+ ["Compare and contrast","Show similarities and differences, discussing both texts together.",'"Both texts... However, while Text A..., Text B..."']];
+const termMap=Object.fromEntries(TERMS.map(t=>[t[0],t]));
+document.getElementById('toolkitBody').innerHTML=TERMS.map(t=>`<tr><td><b>${t[0]}</b></td><td>${t[1]}</td><td>${t[2]}</td></tr>`).join('');
+
+const QS=[
+ {id:"q1",term:"Identify",text:"one simile the writer uses in paragraph 5.",marks:"1 mark",rows:2,
+  model:'One simile is "like a smoker reaching for a cigarette that is not there." (Also correct: "like a room after an argument.")'},
+ {id:"q2",term:"Outline",text:"how the family's experience of the basket rule changes from paragraph 5 to paragraph 6.",marks:"2 marks",
+  model:'In the first week the rule is "a disaster": the daughter sulks and the silence feels "heavy and awkward". By weeks three and four the family talks properly, sharing stories and listening to the grandmother for an hour.'},
+ {id:"q3",term:"Explain",text:'why the writer begins the article with a precise number ("forty-one times") in paragraph 1.',marks:"3 marks",
+  model:'The exact number makes the problem feel real and measurable, so readers cannot dismiss it. Admitting that "eleven" of the checks were hers makes her sound honest and part of the problem, so she does not seem preachy. This hooks the reader and builds trust from the first line.'},
+ {id:"q4",term:"Analyse",text:"how the writer uses the rhetorical question in paragraph 3 to affect the reader.",marks:"3 marks",
+  model:'The question "Have you ever..." speaks directly to "you", so readers recall a time they were ignored. The short sentences that follow ("It is a small thing. It lasts a second.") slow the moment down and show how a tiny action can hurt. The reader feels the problem personally before the writer offers her solution.'},
+ {id:"q5",term:"Interpret",text:'what the writer means by the final sentence of paragraph 8: "we are only where we are."',marks:"3 marks",
+  model:'She means that for one hour her family is fully present, with their minds and bodies in the same place. This echoes paragraph 2, where "each of us was somewhere else", and shows that the basket has given them back their attention to each other.'},
+ {id:"q6",term:"Describe",text:"how the main character reacts to the people around her during the film. Refer to at least one specific scene.",marks:"3 marks",
+  model:'The main character stays quiet and watches while everyone around her looks at their phones. At lunch she looks at her friends, waiting to talk, but they keep scrolling. As the day goes on her face becomes more lonely and resigned.'},
+ {id:"q7",term:"Analyse",text:"how the film's ending, with the character back in bed beside her partner, creates meaning for the audience.",marks:"3 marks",
+  model:'The film ends where it began, with her partner still on his phone in bed. This circular structure suggests that nothing has changed and the habit is part of everyday life. Because even the most private space is interrupted, the audience is left uncomfortable and thinking about their own phone use.'}];
+
+for(const q of QS){
+  const t=termMap[q.term];
+  document.getElementById(q.id).innerHTML=`<div class="q">
+   <p class="q-head"><span class="q-num">${q.id.slice(1)}.</span><button class="term" type="button" aria-expanded="false" data-tip="${q.id}-tip">${q.term}</button> ${q.text} <span class="marks">(${q.marks})</span></p>
+   <p class="tip" id="${q.id}-tip" hidden><b>${q.term}:</b> ${t[1]} Try: ${t[2]}</p>
+   <label class="muted" for="${q.id}-a" style="font-size:.9rem">Your answer (2 to 3 sentences)</label>
+   <textarea id="${q.id}-a" data-save rows="${q.rows||4}"></textarea>
+   <button class="btn ghost reveal" type="button" data-model="${q.id}-m" data-inputs="#${q.id}-a" disabled>Check my answer</button>
+   <div class="model" id="${q.id}-m" hidden><b>Model answer</b><p>${q.model}</p></div></div>`;
+}
+document.querySelectorAll('.term').forEach(b=>b.addEventListener('click',()=>{
+  const tip=document.getElementById(b.dataset.tip); tip.hidden=!tip.hidden; b.setAttribute('aria-expanded',String(!tip.hidden));}));
+
+const scenes=["In bed (opening)","Lunch with friends","Concert / bowling","Birthday party","In bed (ending)"];
+document.getElementById('videoGrid').innerHTML=scenes.map((s,i)=>`<tr><td><b>${s}</b></td><td><textarea id="vg${i}a" data-save aria-label="${s}: other people"></textarea></td><td><textarea id="vg${i}b" data-save aria-label="${s}: main character"></textarea></td></tr>`).join('');
+const comp=["Main message about phones","One key piece of evidence","Tone or mood [hopeful / bleak / humorous / reflective / critical]","How it ends","Effect on the audience"];
+document.getElementById('compGrid').innerHTML=comp.map((s,i)=>`<tr><td><b>${s}</b></td><td><textarea id="cg${i}a" data-save aria-label="${s}: Text A"></textarea></td><td><textarea id="cg${i}b" data-save aria-label="${s}: Text B"></textarea></td></tr>`).join('');
+
+// Frames: "__" marks a blank
+const FRAMES=[
+ {h:"Similarity and difference in one line",parts:["<b>Similarity:</b> both texts show that __.<br><b>Difference:</b> Text A __, whereas Text B __."],
+  model:"Similarity: both texts show that phones can stop people from paying attention to each other. Difference: Text A offers a practical solution, whereas Text B leaves the problem unresolved."},
+ {h:"Paragraph 1: Introduction",parts:['Both the opinion column "The Basket by the Door" and the short film "I Forgot My Phone" explore the idea that smartphones __. While both texts suggest that people can be physically together but __, they differ in how they __. Text A uses __ <span class="opt">[personal anecdote / humour / direct address to the reader]</span> to __, whereas Text B relies on __ <span class="opt">[visual storytelling / repetition of scenes / the character\'s silent expressions]</span> to __. Ultimately, Text A offers __, while Text B leaves the audience feeling __.'],
+  model:'Both the opinion column "The Basket by the Door" and the short film "I Forgot My Phone" explore the idea that smartphones weaken the connection between people who are physically close. While both texts suggest that people can be physically together but emotionally absent, they differ in how they present a solution. Text A uses personal anecdote to persuade readers that families can change their habits, whereas Text B relies on visual storytelling and the character\'s silent expressions to show the loneliness of being ignored. Ultimately, Text A offers hope and a practical solution, while Text B leaves the audience feeling uncomfortable and reflective.'},
+ {h:"Paragraph 2: Similarity (theme)",parts:['One key similarity between the two texts is that both present __ as a barrier to genuine connection. In Text A, the writer describes how her family were "together in the same room" yet "each of us was somewhere else," which shows that __. Similarly, in Text B, during the __ scene, the other characters __ while the main character __. This visual detail suggests that __. In both texts, the creators want the audience to realise that __.'],
+  model:'One key similarity between the two texts is that both present the smartphone as a barrier to genuine connection. In Text A, the writer describes how her family were "together in the same room" yet "each of us was somewhere else," which shows that sharing a space is different from sharing attention. Similarly, in Text B, during the lunch scene, the other characters stare at their screens while the main character waits silently for someone to talk to her. This visual detail suggests that phones make people invisible to each other. In both texts, the creators want the audience to realise that real connection needs attention.'},
+ {h:"Paragraph 3: Difference (method and tone)",parts:['However, the two texts differ in how they communicate this message. Text A is written in the first person and uses __ <span class="opt">[the rhetorical question in paragraph 3 / the simile in paragraph 5 / the precise number in paragraph 1]</span>, for example "__". This makes the reader feel __ because __. In contrast, Text B has almost no dialogue, so the message is created through __ <span class="opt">[facial expressions / camera focus on phones / repetition of similar scenes]</span>. For instance, when __, the audience feels __. This difference matters because a written column can __, while a silent film can __.'],
+  model:'However, the two texts differ in how they communicate this message. Text A is written in the first person and uses the rhetorical question in paragraph 3, for example "Have you ever spoken to someone and watched their eyes drift down". This makes the reader feel personally involved because they remember being ignored themselves. In contrast, Text B has almost no dialogue, so the message is created through facial expressions and repetition of similar scenes. For instance, when the birthday boy records his own party, the audience feels the absurdity of missing a moment in order to capture it. This difference matters because a written column can speak directly to the reader and argue a case, while a silent film can let viewers notice the problem for themselves.'},
+ {h:"Paragraph 4: Difference (endings and solutions)",parts:['The most significant difference lies in the endings of the two texts. Text A ends with __, which creates a __ <span class="opt">[hopeful / encouraging / practical]</span> tone, as the writer directly tells the reader to "__." On the other hand, Text B ends __, exactly where it began, which suggests that __. This circular structure makes the audience feel __. Therefore, while Text A presents the problem as __ <span class="opt">[solvable / something families can control]</span>, Text B presents it as __ <span class="opt">[a cycle / a habit that society has accepted]</span>.'],
+  model:'The most significant difference lies in the endings of the two texts. Text A ends with a direct call to action, which creates a hopeful tone, as the writer directly tells the reader to "Try it. Find a basket." On the other hand, Text B ends in bed beside her partner, exactly where it began, which suggests that nothing has changed. This circular structure makes the audience feel trapped and uneasy. Therefore, while Text A presents the problem as something families can control, Text B presents it as a habit that society has accepted.'},
+ {h:"Paragraph 5: Conclusion",parts:['In conclusion, both texts explore how smartphones can __ the people who are physically closest to us. Text A uses __ to persuade readers that __, whereas Text B uses __ to make viewers __. Together, the two texts suggest that __. Personally, I found Text __ more powerful because __.'],
+  model:'In conclusion, both texts explore how smartphones can separate us from the people who are physically closest to us. Text A uses personal anecdote and direct address to persuade readers that small rules can restore connection, whereas Text B uses silent, repeated scenes to make viewers recognise their own behaviour. Together, the two texts suggest that technology harms relationships when it replaces attention. (Your final sentence is your own choice. Did you give a reason?)'}];
+let bn=0;
+document.getElementById('frames').innerHTML=FRAMES.map((f,fi)=>{
+  const html=f.parts[0].replace(/__/g,()=>`<span class="blank" contenteditable="true" role="textbox" aria-label="Blank ${++bn}" id="b${bn}" data-save></span>`);
+  return `<div class="q"><h3>${f.h}</h3><p class="frame" id="f${fi}">${html}</p><button class="btn ghost reveal" type="button" data-model="f${fi}-m" data-inputs="#f${fi} .blank" disabled>Check this paragraph</button><div class="model" id="f${fi}-m" hidden><b>Model version</b><p>${f.model}</p></div></div>`;}).join('');
+document.querySelectorAll('.blank').forEach(el=>{
+  el.addEventListener('keydown',e=>{if(e.key==='Enter')e.preventDefault();});
+  el.addEventListener('paste',e=>{e.preventDefault();const t=(e.clipboardData||window.clipboardData).getData('text').replace(/\s+/g,' ');document.execCommand('insertText',false,t);});
+});
+
+// Save / restore
+const KEY='myp-task1-v3';
+let store={};
+try{store=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){store={};}
+const fields=[...document.querySelectorAll('[data-save]')];
+const getVal=el=>(el.tagName==='TEXTAREA'||el.tagName==='INPUT')?el.value:el.textContent;
+const setVal=(el,v)=>{if(el.tagName==='TEXTAREA'||el.tagName==='INPUT')el.value=v;else el.textContent=v;};
+fields.forEach(el=>{if(store.f&&store.f[el.id])setVal(el,store.f[el.id]);el.addEventListener('input',()=>{save();updateProgress();});});
+function save(){store.f={};fields.forEach(el=>{const v=getVal(el).trim();if(v)store.f[el.id]=v;});try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
+function updateProgress(){
+  const n=QS.filter(q=>document.getElementById(q.id+'-a').value.trim()).length;
+  document.getElementById('progress').textContent=`${n} of 7 questions answered`;
+  const blanks=[...document.querySelectorAll('.blank')];const bf=blanks.filter(b=>b.textContent.trim()).length;
+  const missing=QS.filter(q=>!document.getElementById(q.id+'-a').value.trim()).map(q=>q.id.slice(1));
+  document.getElementById('status').innerHTML=`Short answers: <b>${n} of 7</b>. Essay frame blanks filled: <b>${bf} of ${blanks.length}</b>.`+(missing.length?` <span class="missing">Still empty: question ${missing.join(', ')}.</span>`:'');
+  refreshButtons();
+}
+
+// Timer
+const PHASES=[[3,'Start'],[8,'Command terms'],[20,'Part A'],[28,'Part B'],[45,'Part C']];
+let tInt=null;
+function tick(){
+  const start=store.t; if(!start)return;
+  const el=Math.floor((Date.now()-start)/1000), left=Math.max(0,45*60-el);
+  const min=el/60, ph=(PHASES.find(p=>min<p[0])||[0,'Time is up'])[1];
+  document.getElementById('clock').textContent=`${String(Math.floor(left/60)).padStart(2,'0')}:${String(left%60).padStart(2,'0')} left · ${ph}`;
+  if(left===0){clearInterval(tInt);}
+}
+function startTimer(){if(!store.t){store.t=Date.now();save();}document.getElementById('timerBtn').hidden=true;tick();clearInterval(tInt);tInt=setInterval(tick,1000);}
+document.getElementById('timerBtn').addEventListener('click',startTimer);
+if(store.t)startTimer();
+
+// Per-question check
+store.r=store.r||{};
+const revealBtns=[...document.querySelectorAll('.reveal')];
+const inputsOf=btn=>[...document.querySelectorAll(btn.dataset.inputs)];
+function refreshButtons(){revealBtns.forEach(btn=>{if(store.r[btn.dataset.model])return;btn.disabled=!inputsOf(btn).some(el=>getVal(el).trim());});}
+function revealOne(btn){
+  document.getElementById(btn.dataset.model).hidden=false;
+  inputsOf(btn).forEach(el=>{if(el.tagName==='TEXTAREA')el.readOnly=true;else el.setAttribute('contenteditable','false');});
+  btn.disabled=true;btn.classList.add('done');btn.textContent='Checked: compare your answer with the model';
+}
+revealBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{store.r[btn.dataset.model]=true;save();revealOne(btn);});
+  if(store.r[btn.dataset.model])revealOne(btn);
+});
+
+// Gather responses
+const frameText=q=>{const c=q.querySelector('.frame').cloneNode(true);
+  c.querySelectorAll('.blank').forEach(b=>b.replaceWith('['+(b.textContent.trim()||'...')+']'));
+  c.querySelectorAll('.opt').forEach(o=>o.remove());c.querySelectorAll('br').forEach(br=>br.replaceWith(' '));
+  return c.textContent.replace(/\s+/g,' ').trim();};
+const nameVal=()=>document.getElementById('studentName').value.trim();
+function getPlainText(){
+  const out=['MYP Task 1 practice: my answers','Name: '+(nameVal()||'(not given)'),''];
+  QS.forEach(q=>{out.push(`${q.id.slice(1)}. ${q.term} ${q.text}`);out.push(document.getElementById(q.id+'-a').value.trim()||'(no answer)');out.push('');});
+  out.push('Film notes:');scenes.forEach((sc,i)=>out.push(`${sc}: others: ${document.getElementById('vg'+i+'a').value.trim()||'-'} | main character: ${document.getElementById('vg'+i+'b').value.trim()||'-'}`));out.push('');
+  out.push('Comparison grid:');comp.forEach((c,i)=>out.push(`${c}: Text A: ${document.getElementById('cg'+i+'a').value.trim()||'-'} | Text B: ${document.getElementById('cg'+i+'b').value.trim()||'-'}`));out.push('');
+  out.push('Compare and contrast frame:');
+  document.querySelectorAll('#frames .q').forEach(q=>{out.push(q.querySelector('h3').textContent+': '+frameText(q));out.push('');});
+  return out.join('\n');
+}
+async function buildDocx(){
+  const D=window.docx;const W=9026;
+  const bd={style:D.BorderStyle.SINGLE,size:6,color:'9AA6B6'};const borders={top:bd,bottom:bd,left:bd,right:bd};
+  const para=(text,o={})=>new D.Paragraph({spacing:{after:120},children:[new D.TextRun({text,...o})]});
+  const H=(t,l)=>new D.Paragraph({heading:l,spacing:{before:240,after:120},children:[new D.TextRun(t)]});
+  const cell=(t,w,head)=>new D.TableCell({width:{size:w,type:D.WidthType.DXA},borders,shading:head?{type:D.ShadingType.CLEAR,color:'auto',fill:'E2F1F1'}:undefined,margins:{top:60,bottom:60,left:100,right:100},children:[new D.Paragraph({children:[new D.TextRun({text:t||'',bold:!!head})]})]});
+  const grid=(hdr,rows,ws)=>new D.Table({width:{size:W,type:D.WidthType.DXA},columnWidths:ws,rows:[new D.TableRow({tableHeader:true,children:hdr.map((h,i)=>cell(h,ws[i],true))}),...rows.map(r=>new D.TableRow({children:r.map((c,i)=>cell(c,ws[i]))}))]});
+  const kids=[
+    new D.Paragraph({heading:D.HeadingLevel.TITLE,children:[new D.TextRun('MYP Task 1 practice: my responses')]}),
+    para('Name: '+(nameVal()||'(not given)'),{bold:true}),
+    para('Downloaded: '+new Date().toLocaleString()),
+    H('Part A and Part B: short answers',D.HeadingLevel.HEADING_1)];
+  QS.forEach(q=>{
+    kids.push(new D.Paragraph({spacing:{before:160,after:60},children:[new D.TextRun({text:q.id.slice(1)+'. ',bold:true}),new D.TextRun({text:q.term,bold:true,color:'0E6B70'}),new D.TextRun(' '+q.text+' ('+q.marks+')')]}));
+    const ans=document.getElementById(q.id+'-a').value.trim();
+    ans?ans.split(/\n+/).forEach(l=>kids.push(para(l))):kids.push(para('(no answer)',{italics:true,color:'777777'}));
+    if(store.r&&store.r[q.id+'-m'])kids.push(para('Model answer checked after writing.',{italics:true,color:'777777',size:18}));
+  });
+  kids.push(H('Film notes',D.HeadingLevel.HEADING_1));
+  kids.push(grid(['Scene','What do the other people do?','What does the main character do?'],scenes.map((sc,i)=>[sc,document.getElementById('vg'+i+'a').value.trim(),document.getElementById('vg'+i+'b').value.trim()]),[2200,3413,3413]));
+  kids.push(H('Comparison grid',D.HeadingLevel.HEADING_1));
+  kids.push(grid(['','Text A: the article','Text B: the film'],comp.map((c,i)=>[c,document.getElementById('cg'+i+'a').value.trim(),document.getElementById('cg'+i+'b').value.trim()]),[2600,3213,3213]));
+  kids.push(H('Compare and contrast writing frame',D.HeadingLevel.HEADING_1));
+  kids.push(para('Your own words are shown in bold.',{italics:true,color:'777777'}));
+  document.querySelectorAll('#frames .q').forEach(q=>{
+    kids.push(H(q.querySelector('h3').textContent,D.HeadingLevel.HEADING_2));
+    const runs=[];
+    const walk=n=>{n.childNodes.forEach(c=>{
+      if(c.nodeType===3){if(c.textContent)runs.push(new D.TextRun(c.textContent.replace(/\s+/g,' ')));}
+      else if(c.classList&&c.classList.contains('blank')){const t=c.textContent.trim();runs.push(new D.TextRun({text:t||'________',bold:true,underline:{}}));}
+      else if(c.classList&&c.classList.contains('opt')){}
+      else if(c.nodeName==='BR'){runs.push(new D.TextRun({text:'',break:1}));}
+      else walk(c);});};
+    walk(q.querySelector('.frame'));
+    kids.push(new D.Paragraph({spacing:{after:160,line:320},children:runs}));
+  });
+  const doc=new D.Document({styles:{default:{document:{run:{font:'Calibri',size:22}}}},
+    sections:[{properties:{page:{size:{width:11906,height:16838},margin:{top:1440,bottom:1440,left:1440,right:1440}}},children:kids}]});
+  return D.Packer.toBlob(doc);
+}
+const msgEl=()=>document.getElementById('copyMsg');
+document.getElementById('dlBtn').addEventListener('click',async()=>{
+  const btn=document.getElementById('dlBtn');btn.disabled=true;
+  const safe=(nameVal()||'student').replace(/[^\p{L}\p{N} _-]+/gu,'').trim().replace(/\s+/g,'_')||'student';
+  let data,filename;
+  try{
+    if(window.docx){data=await buildDocx();filename=`MYP_Task1_${safe}.docx`;}
+    else{data=getPlainText();filename=`MYP_Task1_${safe}.txt`;}
+  }catch(e){data=getPlainText();filename=`MYP_Task1_${safe}.txt`;}
+  try{
+    if(window.claude&&window.claude.use){
+      const dl=await window.claude.use('downloads');
+      if(!dl){msgEl().textContent='Download is not available in this view. Use Copy all my answers instead.';return;}
+      try{await dl.save({filename,data});msgEl().textContent='Downloaded '+filename+'. Submit it as your teacher has asked.';}
+      catch(e){msgEl().textContent=e&&e.code==='declined'?'Download cancelled. Press the button again when you are ready.':(e&&e.code==='rate_limited'?'Please wait a moment, then try again.':'Download is not available in this view. Use Copy all my answers instead.');}
+      return;
+    }
+    const blob=data instanceof Blob?data:new Blob([data],{type:'text/plain'});
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),4000);
+    msgEl().textContent='Downloaded '+filename+'. Submit it as your teacher has asked.';
+  }finally{btn.disabled=false;}
+});
+document.getElementById('copyBtn').addEventListener('click',()=>{
+  const text=getPlainText(), area=document.getElementById('copyArea'), msg=msgEl();
+  const fallback=()=>{area.hidden=false;area.value=text;area.select();msg.textContent='Select all the text in the box and copy it.';};
+  try{navigator.clipboard.writeText(text).then(()=>{msg.textContent='Copied. Paste your answers into AssessPrep.';},fallback);}catch(e){fallback();}
+});
+updateProgress();
+
+document.getElementById('vidPlay').addEventListener('click',()=>{
+  const f=document.createElement('iframe');
+  f.src='https://www.youtube.com/embed/OINa46HeWg8?autoplay=1&rel=0';
+  f.title='I Forgot My Phone';
+  f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+  f.referrerPolicy='strict-origin-when-cross-origin';
+  f.allowFullscreen=true;
+  const v=document.getElementById('vid'); v.innerHTML=''; v.appendChild(f);
+});
+</script>
+</body>
+</html>
